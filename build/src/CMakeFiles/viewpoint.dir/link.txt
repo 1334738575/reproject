@@ -1,0 +1,1 @@
+/usr/bin/c++  -fPIC -std=c++11  -O3 -DNDEBUG   -shared -Wl,-soname,libviewpoint.so -o ../../lib/libviewpoint.so CMakeFiles/viewpoint.dir/Frame.cpp.o 

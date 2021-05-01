@@ -1,0 +1,1 @@
+/usr/bin/c++   -std=c++11  -O3 -DNDEBUG    CMakeFiles/framework.dir/Camera.cpp.o  -o ../../bin/framework -rdynamic 

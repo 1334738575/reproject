@@ -1,0 +1,11 @@
+/home/anoorb2/vs_pro/framework/build/CMakeFiles/edit_cache.dir
+/home/anoorb2/vs_pro/framework/build/CMakeFiles/rebuild_cache.dir
+/home/anoorb2/vs_pro/framework/build/src/CMakeFiles/edit_cache.dir
+/home/anoorb2/vs_pro/framework/build/src/CMakeFiles/viewpointa.dir
+/home/anoorb2/vs_pro/framework/build/src/CMakeFiles/framea.dir
+/home/anoorb2/vs_pro/framework/build/src/CMakeFiles/cama.dir
+/home/anoorb2/vs_pro/framework/build/src/CMakeFiles/frame.dir
+/home/anoorb2/vs_pro/framework/build/src/CMakeFiles/cam.dir
+/home/anoorb2/vs_pro/framework/build/src/CMakeFiles/rebuild_cache.dir
+/home/anoorb2/vs_pro/framework/build/src/CMakeFiles/output.dir
+/home/anoorb2/vs_pro/framework/build/src/CMakeFiles/viewpoint.dir

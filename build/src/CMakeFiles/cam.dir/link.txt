@@ -1,0 +1,1 @@
+/usr/bin/c++  -fPIC -std=c++11  -O3 -DNDEBUG   -shared -Wl,-soname,libCamera.so -o ../../lib/libCamera.so CMakeFiles/cam.dir/Camera.cpp.o 
