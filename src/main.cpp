@@ -1,4 +1,6 @@
 #include<iostream>
+#include<string>
+#include<fstream>
 #include<opencv2/core/core.hpp>
 #include<opencv2/highgui/highgui.hpp>
 #include<opencv2/calib3d/calib3d.hpp>
@@ -34,10 +36,67 @@ void Compelement_Hole(V_viewpoint *v_vp1,V_viewpoint *v_vp2,cv::Mat input)
     }
 }
 
+void load_cams(std::vector<Camera> &cams)//加载相机
+{
+    char data[100];
+	std::ifstream infile;
+	infile.open("../cam_parameter.txt");
+    int id;
+    Eigen::Matrix3d K;
+    Eigen::Matrix3d R;
+    Eigen::Vector3d t;
+    Eigen::Matrix3d invK;
+    Camera temp_cam;
+    while(1)
+    {
+        if (infile >> data)
+        {
+            sscanf(data, " %d ", &id);
+            cout << id << endl;
+        }
+        else
+        {
+            break;
+        }
+        int i = 0;
+        while (infile >> data)
+        {
+            int y=i/3;
+            int x=i%3;
+            sscanf(data, "%lf", &K(y, x));
+            i++;
+            if(i==9)
+                break;
+        }
+        cout << K << endl;
+        i = 0;
+        while (infile >> data)
+        {
+            int y=i/4;
+            int x=i%4;
+            if(x==3)
+                sscanf(data, "%lf", &t(y, 0));
+            else
+                sscanf(data, "%lf", &R(y, x));
+            i++;
+            if(i==12)
+                break;
+        }
+        cout << R << endl;
+        cout << t << endl;
+        invK = K.inverse();
+        temp_cam.create_Camera(id, R, t, K, invK);
+        cams.push_back(temp_cam);
+    }
+    infile.close();
+}
+
 int main()
 {
     //创建两个相机实例
     std::vector<Camera> cams;
+    load_cams(cams);//加载相机参数
+    /*
     Camera cam0, cam1;
     //cam0
     cam0.cam_id = 0;
@@ -62,7 +121,6 @@ int main()
     
     cam0.K = K;
     cam0.invK = invK;
-    cams.push_back(cam0);
     //cam1
     cam1.cam_id = 1;
     Eigen::Matrix3d R2;
@@ -84,7 +142,7 @@ int main()
     
     cam1.K = K2;
     cam1.invK = invK2;
-    cams.push_back(cam1);
+    */
     //读取两个相机中对应的rgb和深度图
     cv::Mat img1 = cv::imread("/home/anoorb2/icp/build/repro_image/cam0/color-cam0-f000.jpg", 0);
     cv::Mat depth_img1 = cv::imread("/home/anoorb2/icp/build/repro_image/cam0/depth-cam0-f000.png", 0);
@@ -95,17 +153,17 @@ int main()
     Frame *frame2 = new Frame(img2,depth_img2,0,1);
     //frame1->Show_img();
     //frame1->Show_depth_img();
-    frame1->Compute_Depth(invK);//计算实际深度
-    frame2->Compute_Depth(invK2);
+    frame1->Compute_Depth(cams[0].invK);//计算实际深度
+    frame2->Compute_Depth(cams[1].invK);
     //创建两个虚拟视点实例
-    V_viewpoint *v_vp1 = new V_viewpoint(0, 0, 0, R, t);
-    V_viewpoint *v_vp2 = new V_viewpoint(0, 0, 0, R2, t2);
+    V_viewpoint *v_vp1 = new V_viewpoint(0, 0, 0, cams[0].cam_R, cams[0].cam_t);
+    V_viewpoint *v_vp2 = new V_viewpoint(0, 0, 0, cams[1].cam_R, cams[1].cam_t);
     std::string img_name = "trans1.jpg";
-    v_vp1->Compute_Trans(cam0.K, frame1->p_3d_set, frame1->img);//计算旋转
+    v_vp1->Compute_Trans(cams[0].K, frame1->p_3d_set, frame1->img);//计算旋转
     v_vp1->Show_V_img();//显示旋转后的图像
     v_vp1->Save_V_img(img_name);//保存旋转后的图像
     img_name = "trans2.jpg";
-    v_vp2->Compute_Trans(cam1.K, frame2->p_3d_set, frame2->img);
+    v_vp2->Compute_Trans(cams[1].K, frame2->p_3d_set, frame2->img);
     v_vp2->Show_V_img();
     v_vp2->Save_V_img(img_name);
     img_name = "fill.jpg";
