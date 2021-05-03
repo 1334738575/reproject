@@ -91,8 +91,23 @@ void load_cams(std::vector<Camera> &cams)//加载相机
     infile.close();
 }
 
-int main()
+int main(int argc, char**argv)
 {
+    
+    if(argc != 5){
+        cerr << endl << "Usage: ./Line path_to_image1 path_to_image2" << endl;
+        return 1;
+    }
+    string imagePath1=string(argv[1]);
+    string depthPath1=string(argv[2]);
+    string imagePath2=string(argv[3]);
+    string depthPath2=string(argv[4]);
+    cout<<"import two images and depthimages"<<endl;
+    cv::Mat img1=cv::imread(imagePath1,0);
+    cv::Mat depth_img1=cv::imread(depthPath1,0);
+    cv::Mat img2=cv::imread(imagePath2,0);
+    cv::Mat depth_img2=cv::imread(depthPath2,0);
+    
     //创建两个相机实例
     std::vector<Camera> cams;
     load_cams(cams);//加载相机参数
@@ -144,10 +159,12 @@ int main()
     cam1.invK = invK2;
     */
     //读取两个相机中对应的rgb和深度图
+    /*
     cv::Mat img1 = cv::imread("/home/anoorb2/icp/build/repro_image/cam0/color-cam0-f000.jpg", 0);
     cv::Mat depth_img1 = cv::imread("/home/anoorb2/icp/build/repro_image/cam0/depth-cam0-f000.png", 0);
     cv::Mat img2 = cv::imread("/home/anoorb2/icp/build/repro_image/cam1/color-cam1-f000.jpg", 0);
     cv::Mat depth_img2 = cv::imread("/home/anoorb2/icp/build/repro_image/cam1/depth-cam1-f000.png", 0);
+    */
     //创建两个帧对象实例
     Frame *frame1 = new Frame(img1,depth_img1,0,0);
     Frame *frame2 = new Frame(img2,depth_img2,0,1);
